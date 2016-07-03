@@ -23,18 +23,18 @@
 		[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
 		[2,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2],
 		[2,1,2,2,2,2,1,2,1,1,2,1,2,1,1,2,1,2,2,2,2,1,2],
-		[2,1,1,2,3,1,1,2,1,1,1,3,1,1,1,2,1,1,3,2,1,1,2],
+		[2,1,1,2,4,1,1,2,1,1,1,3,1,1,1,2,1,1,4,2,1,1,2],
 		[2,2,1,2,1,2,1,2,1,1,2,1,2,1,1,2,1,2,1,2,1,2,2],
 		[2,1,1,2,1,1,1,2,1,1,2,1,2,1,1,2,1,1,1,2,1,1,2],
 		[2,1,2,2,1,2,2,2,1,1,1,1,1,1,1,2,2,2,1,2,2,1,2],
 		[2,1,2,1,1,2,1,1,1,1,2,1,2,1,1,1,1,2,1,1,2,1,2],
 		[2,1,2,1,2,2,1,2,2,1,2,0,2,1,2,2,1,2,2,1,2,1,2],
-		[2,1,1,1,1,2,1,2,2,1,2,0,2,1,2,2,1,1,1,1,1,1,2],
+		[2,4,1,1,1,2,1,2,2,1,2,0,2,1,2,2,1,1,1,1,1,4,2],
 		[2,1,2,1,1,2,1,1,1,1,2,2,2,1,1,1,1,2,1,1,2,1,2],
-		[2,1,2,2,1,2,2,2,1,1,1,1,1,1,1,2,2,2,1,2,2,1,2],
+		[2,1,2,2,1,2,2,2,1,1,1,4,1,1,1,2,2,2,1,2,2,1,2],
 		[2,1,1,2,1,1,1,2,1,1,2,1,2,1,1,2,1,1,1,2,1,1,2],
 		[2,2,1,2,1,2,1,2,1,1,2,1,2,1,1,2,1,2,1,2,1,2,2],
-		[2,1,1,2,3,1,1,2,1,1,1,3,1,1,1,2,1,1,3,2,1,1,2],
+		[2,1,1,2,4,1,1,2,1,1,1,3,1,1,1,2,1,1,4,2,1,1,2],
 		[2,1,2,2,2,2,1,2,1,1,2,1,2,1,1,2,1,2,2,2,2,1,2],
 		[2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2],
 		[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2]
@@ -44,7 +44,8 @@
 
 	var pacman = {
 		x: 1,
-		y: 1
+		y: 1,
+		z: 0
 	};
 
 	var blinky = {
@@ -80,6 +81,8 @@
 					output += "<div class='coin'></div>";
 				else if (world[i][j] == 3)
 					output += "<div class='cherry'></div>";
+				else if (world[i][j] == 4)
+					output += "<div class='powerdot'></div>";
 				if (world[i][j] == 0)
 					output += "<div class='empty'></div>";
 			}
@@ -95,7 +98,7 @@
 	}
 	// Display Blinky when first shows up, then display every moves
 	function displayBlinkyStart(){
-		$('#container').append("<div id='blinky' class=''></div>");
+		$('#container').append("<div id='blinky'></div>");
 		document.getElementById('blinky').style.top = blinky.y*20+"px";
 		document.getElementById('blinky').style.left = blinky.x*20+"px";
 	}
@@ -105,7 +108,7 @@
 	}
 	// Display Inky when first shows up, then display moves
 	function displayInkyStart(){
-		$('#container').append("<div id='inky' class=''></div>");
+		$('#container').append("<div id='inky'></div>");
 		document.getElementById('inky').style.top = inky.y*20+"px";
 		document.getElementById('inky').style.left = inky.x*20+"px";
 	}
@@ -115,7 +118,7 @@
 	}
 	// Display Pinky when first shows up then display moves
 	function displayPinkyStart(){
-		$('#container').append("<div id='pinky' class=''></div>");
+		$('#container').append("<div id='pinky'></div>");
 		document.getElementById('pinky').style.top = pinky.y*20+"px";
 		document.getElementById('pinky').style.left = pinky.x*20+"px";
 	}
@@ -125,7 +128,7 @@
 	}
 	// Display Clyde when first shows up then display moves
 	function displayClydeStart(){
-		$('#container').append("<div id='clyde' class=''></div>");
+		$('#container').append("<div id='clyde'></div>");
 		document.getElementById('clyde').style.top = clyde.y*20+"px";
 		document.getElementById('clyde').style.left = clyde.x*20+"px";
 	}
@@ -160,8 +163,14 @@
 			}
 			displayBlinky();
 
-			if (pacman.y === blinky.y && pacman.x === blinky.x){
-			alert('Game Over');
+			if (pacman.y === blinky.y && pacman.x === blinky.x && pacman.z === 1){
+				blinky = {x: 11, y: 9};
+				displayBlinky();
+				score += 300;
+				displayScore();
+			}
+			else if (pacman.y === blinky.y && pacman.x === blinky.x) {
+				alert('Game Over');
 			}
 		}
 	}
@@ -188,8 +197,14 @@
 			}
 			displayInky();
 
-			if (pacman.y === inky.y && pacman.x === inky.x){
-			alert('Game Over');
+			if (pacman.y === inky.y && pacman.x === inky.x && pacman.z === 1){
+				inky = {x: 11, y: 9};
+				displayIinky();
+				score += 300;
+				displayScore();
+			}
+			else if (pacman.y === inky.y && pacman.x === inky.x) {
+				alert('Game Over');
 			}
 		}
 	}
@@ -216,8 +231,14 @@
 			}
 			displayPinky();
 
-			if (pacman.y === pinky.y && pacman.x === pinky.x){
-			alert('Game Over');
+			if (pacman.y === pinky.y && pacman.x === pinky.x && pacman.z === 1){
+				pinky = {x: 11, y: 9};
+				displayPinky();
+				score += 300;
+				displayScore();
+			}
+			else if (pacman.y === pinky.y && pacman.x === pinky.x) {
+				alert('Game Over');
 			}
 		}
 	}
@@ -227,15 +248,15 @@
 		function goDir () {
 			var dir = Math.floor(Math.random() * 100) + 1;
 			// move right
-			if (dir <= 32 && world[clyde.y][clyde.x+1] !== 2) {
+			if (dir <= 33 && world[clyde.y][clyde.x+1] !== 2) {
 				clyde.x++;
 			}
 			// move left
-			else if (dir <= 72 && world[clyde.y][clyde.x-1] !== 2) {
+			else if (dir <= 71 && world[clyde.y][clyde.x-1] !== 2) {
 				clyde.x--;
 			}
 			// move down
-			else if (dir <= 59 && world[clyde.y+1][clyde.x] !== 2) {
+			else if (dir <= 61 && world[clyde.y+1][clyde.x] !== 2) {
 				clyde.y++;
 			}
 			// move up
@@ -244,11 +265,32 @@
 			}
 			displayClyde();
 
-			if (pacman.y === clyde.y && pacman.x === clyde.x){
-			alert('Game Over');
+			if (pacman.y === clyde.y && pacman.x === clyde.x && pacman.z === 1){
+				clyde = {x: 11, y: 9};
+				displayClyde();
+				score += 300;
+				displayScore();
+			}
+			else if (pacman.y === clyde.y && pacman.x === clyde.x) {
+				alert('Game Over');
 			}
 		}
 	}
+
+	function revGhosts() {
+		document.getElementById('blinky').style.backgroundImage = "url('blinky.gif')";
+		document.getElementById('inky').style.backgroundImage = "url('inky.gif')";
+		document.getElementById('pinky').style.backgroundImage = "url('pinky.gif')";
+		document.getElementById('clyde').style.backgroundImage = "url('clyde.gif')";
+	}
+	function powerPac() {
+		document.getElementById('blinky').style.backgroundImage = "url('powerpacghost.gif')";
+		document.getElementById('inky').style.backgroundImage = "url('powerpacghost.gif')";
+		document.getElementById('pinky').style.backgroundImage = "url('powerpacghost.gif')";
+		document.getElementById('clyde').style.backgroundImage = "url('powerpacghost.gif')";
+		setTimeout(revGhosts, 5000);
+	}
+
 	// takes updates from functions above and displays to user on web
 	displayWorld();
 	displayPacman();
@@ -305,6 +347,15 @@
 			score += 50;
 			displayWorld();
 			displayScore();
+		}
+
+		if (world[pacman.y][pacman.x] == 4){
+			world[pacman.y][pacman.x] = 0;
+			score += 100;
+			displayWorld();
+			displayScore();
+			pacman.z = 1;
+			powerPac();
 		}
 		// update pacman location to user
 		displayPacman();

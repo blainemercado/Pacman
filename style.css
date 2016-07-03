@@ -35,12 +35,19 @@ body {
 		background-color: blue;
 	}
 	div.coin {
-		background: url('coin.gif');
+		background: url('dot.gif');
 		background-repeat: no-repeat;
 		background-position: center;
+		background-size: 5px 5px;
 	}
 	div.cherry {
 		background: url('cherry.png');
+		background-repeat: no-repeat;
+		background-position: center;
+		background-size: 20px 20px;
+	}
+	div.powerdot {
+		background: url('powerdot.gif');
 		background-repeat: no-repeat;
 		background-position: center;
 		background-size: 20px 20px;
