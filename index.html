@@ -18,7 +18,7 @@
 <!-- begining of JS making interaction possible -->
 	<script type="text/javascript">
 	$(document).ready(function(){
-	// setTimeout(displayBlinky(), 2000);
+
 	var world = [
 		[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
 		[2,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2],
@@ -42,10 +42,20 @@
 	// Global variables to reference for score and moving pacman, ghosts
 	var score = 0;
 
+	var coinNum = 1;
+		// console.log(coinNum);
+	var pDotNum = document.getElementsByClassName('powerdot');
+		pDotNum = pDotNum.length;
+	var goal = coinNum + pDotNum;
+		console.log(goal);
+	
 	var pacman = {
 		x: 1,
 		y: 1,
-		z: 0
+		b: 0,
+		p: 0,
+		i: 0,
+		c: 0
 	};
 
 	var blinky = {
@@ -90,7 +100,19 @@
 		}
 		// This document takes the output from above and sets it to the world div in the html code at top//
 		document.getElementById('world').innerHTML = output;
+
+		coinNum = document.getElementsByClassName('coin');
+		// console.log(coinNum.length);
+		coinNum = coinNum.length;
+		// console.log(coinNum);
+
+		pDotNum = document.getElementsByClassName('powerdot');
+		pDotNum = pDotNum.length;
+
+		goal = coinNum + pDotNum;
+		console.log(goal);
 	}
+
 	// function to display pacman around world based on x,y coords converted to px distance from top,left corner
 	function displayPacman(){
 		document.getElementById('pacman').style.top = pacman.y*20+"px";
@@ -142,7 +164,7 @@
 	}
 	// function to move Blinky randomly
 	function moveBlinky(){
-		setInterval(goDir, 200);
+		setInterval(goDir, 250);
 		function goDir () {
 			var dir = Math.floor(Math.random() * 100) + 1;
 			// move right
@@ -163,9 +185,11 @@
 			}
 			displayBlinky();
 
-			if (pacman.y === blinky.y && pacman.x === blinky.x && pacman.z === 1){
+			if (pacman.y === blinky.y && pacman.x === blinky.x && pacman.b === 1){
 				blinky = {x: 11, y: 9};
+				document.getElementById('blinky').style.backgroundImage = "url('blinky.gif')";
 				displayBlinky();
+				pacman.b = 0;
 				score += 300;
 				displayScore();
 			}
@@ -176,7 +200,7 @@
 	}
 	// Move Inky randomly and display
 	function moveInky(){
-		setInterval(goDir, 200);
+		setInterval(goDir, 250);
 		function goDir () {
 			var dir = Math.floor(Math.random() * 100) + 1;
 			// move right
@@ -197,9 +221,11 @@
 			}
 			displayInky();
 
-			if (pacman.y === inky.y && pacman.x === inky.x && pacman.z === 1){
+			if (pacman.y === inky.y && pacman.x === inky.x && pacman.i === 1){
 				inky = {x: 11, y: 9};
-				displayIinky();
+				document.getElementById('inky').style.backgroundImage = "url('inky.gif')";
+				displayInky();
+				pacman.i = 0;
 				score += 300;
 				displayScore();
 			}
@@ -231,9 +257,11 @@
 			}
 			displayPinky();
 
-			if (pacman.y === pinky.y && pacman.x === pinky.x && pacman.z === 1){
+			if (pacman.y === pinky.y && pacman.x === pinky.x && pacman.p === 1){
 				pinky = {x: 11, y: 9};
+				document.getElementById('pinky').style.backgroundImage = "url('pinky.gif')";
 				displayPinky();
+				pacman.p = 0
 				score += 300;
 				displayScore();
 			}
@@ -265,9 +293,11 @@
 			}
 			displayClyde();
 
-			if (pacman.y === clyde.y && pacman.x === clyde.x && pacman.z === 1){
+			if (pacman.y === clyde.y && pacman.x === clyde.x && pacman.c === 1){
 				clyde = {x: 11, y: 9};
+				document.getElementById('clyde').style.backgroundImage = "url('clyde.gif')";
 				displayClyde();
+				pacman.c = 0;
 				score += 300;
 				displayScore();
 			}
@@ -276,21 +306,26 @@
 			}
 		}
 	}
-
+	function revPac() {
+		pacman.b = 0;
+		pacman.p = 0;
+		pacman.i = 0;
+		pacman.c = 0;
+	}
 	function revGhosts() {
 		document.getElementById('blinky').style.backgroundImage = "url('blinky.gif')";
 		document.getElementById('inky').style.backgroundImage = "url('inky.gif')";
 		document.getElementById('pinky').style.backgroundImage = "url('pinky.gif')";
 		document.getElementById('clyde').style.backgroundImage = "url('clyde.gif')";
+		revPac();
 	}
 	function powerPac() {
 		document.getElementById('blinky').style.backgroundImage = "url('powerpacghost.gif')";
 		document.getElementById('inky').style.backgroundImage = "url('powerpacghost.gif')";
 		document.getElementById('pinky').style.backgroundImage = "url('powerpacghost.gif')";
 		document.getElementById('clyde').style.backgroundImage = "url('powerpacghost.gif')";
-		setTimeout(revGhosts, 5000);
+		setTimeout(revGhosts, 9000);
 	}
-
 	// takes updates from functions above and displays to user on web
 	displayWorld();
 	displayPacman();
@@ -334,12 +369,14 @@
 			$('#pacman').switchClass( $('#pacman').attr('class'), "down", 100 );
   			}
 		}
-		// when pacman's coords are over a coin, remove coin and add to score
+		// when pacman's coords are over a coin, remove coin and add to score, 1 closer to goal
 		if (world[pacman.y][pacman.x] == 1){
 			world[pacman.y][pacman.x] = 0;
 			score += 10;
+			goal --;
 			displayWorld();
 			displayScore();
+			displayPacman();
 		}
 		// when pacman's coords are on cherry, remove cherry add score
 		if (world[pacman.y][pacman.x] == 3){
@@ -348,14 +385,71 @@
 			displayWorld();
 			displayScore();
 		}
-
+		// when pacman coords are on powerDot, remove pDot add score, change ghosts, 1 closer to goal
 		if (world[pacman.y][pacman.x] == 4){
 			world[pacman.y][pacman.x] = 0;
 			score += 100;
+			goal --;
+			displayPacman();
 			displayWorld();
 			displayScore();
-			pacman.z = 1;
+			pacman.b = 1;
+			pacman.p = 1;
+			pacman.i = 1;
+			pacman.c = 1;
 			powerPac();
+		}
+		// if Pacman eats Blinky, or runs into Blinky
+		if (pacman.y === blinky.y && pacman.x === blinky.x && pacman.b === 1){
+			blinky = {x: 11, y: 9};
+			document.getElementById('blinky').style.backgroundImage = "url('blinky.gif')";
+			displayBlinky();
+			pacman.b = 0;
+			score += 300;
+			displayScore();
+		}
+		else if (pacman.y === blinky.y && pacman.x === blinky.x) {
+			alert('Game Over');
+		}
+		// if Pacman eats Inky, or runs into Inky
+		if (pacman.y === inky.y && pacman.x === inky.x && pacman.i === 1){
+			inky = {x: 11, y: 9};
+			document.getElementById('inky').style.backgroundImage = "url('inky.gif')";
+			displayInky();
+			pacman.i = 0;
+			score += 300;
+			displayScore();
+		}
+		else if (pacman.y === inky.y && pacman.x === inky.x) {
+			alert('Game Over');
+		}
+		// if Pacman eats Pinky, or runs into Pinky
+		if (pacman.y === pinky.y && pacman.x === pinky.x && pacman.p === 1){
+			pinky = {x: 11, y: 9};
+			document.getElementById('pinky').style.backgroundImage = "url('pinky.gif')";
+			displayPinky();
+			pacman.p = 0
+			score += 300;
+			displayScore();
+		}
+		else if (pacman.y === pinky.y && pacman.x === pinky.x) {
+			alert('Game Over');
+		}
+		// if Pacman eats Clyde, or runs into Clyde
+		if (pacman.y === clyde.y && pacman.x === clyde.x && pacman.c === 1){
+			clyde = {x: 11, y: 9};
+			document.getElementById('clyde').style.backgroundImage = "url('clyde.gif')";
+			displayClyde();
+			pacman.c = 0;
+			score += 300;
+			displayScore();
+		}
+		else if (pacman.y === clyde.y && pacman.x === clyde.x) {
+			alert('Game Over');
+		}
+		// Eat all the dots, win the game!
+		if (goal === 0){
+			alert('You Win!!');
 		}
 		// update pacman location to user
 		displayPacman();
